@@ -1,2 +1,4 @@
 .idea
 src/lib/ann/data/*
+src/data/*
+#src/lib/data

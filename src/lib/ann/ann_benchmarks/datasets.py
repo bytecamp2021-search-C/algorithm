@@ -20,6 +20,7 @@ def download(src, dst):
 def get_dataset_fn(dataset):
     if not os.path.exists('data'):
         os.mkdir('data')
+    print(os.path.abspath('data'))
     return os.path.join('data', '%s.hdf5' % dataset)
 
 
@@ -33,6 +34,7 @@ def get_dataset(which):
         if which in DATASETS:
             print("Creating dataset locally")
             DATASETS[which](hdf5_fn)
+    # print(hdf5_fn)
     hdf5_f = h5py.File(hdf5_fn, 'r')
 
     # here for backward compatibility, to ensure old datasets can still be used with newer versions
@@ -48,7 +50,7 @@ def get_dataset(which):
 
 
 def write_output(train, test, fn, distance, point_type='float', count=100):
-    from ann_benchmarks.algorithms.bruteforce import BruteForceBLAS
+    from src.lib.ann.ann_benchmarks.algorithms.bruteforce import BruteForceBLAS
     n = 0
     f = h5py.File(fn, 'w')
     f.attrs['type'] = 'dense'

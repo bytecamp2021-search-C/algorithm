@@ -2,6 +2,7 @@ import numpy as np
 import math
 import time
 from bcutils import load_input_data
+from metrics import diversity,coverage
 
 
 def raw_dpp(kernel_matrix, max_length, epsilon=1E-10):
@@ -32,6 +33,13 @@ def raw_dpp(kernel_matrix, max_length, epsilon=1E-10):
             break
         selected_items.append(selected_item)
     return selected_items
+def wrapresult(results,dis,items,user):
+    wrap_result = [0.0,[]]
+    for result in results:
+        wrap_result[1].append((result,
+                               dis(items[result],user)))
+    return  wrap_result
+
 def mydpp(recall_number, user, items, similarity, dis, epsilon=1E-10):
     """
     max_length:要找回元素个数
@@ -48,6 +56,7 @@ def mydpp(recall_number, user, items, similarity, dis, epsilon=1E-10):
     selected_items.append(selected_item)
     while len(selected_items) < recall_number:
         k = len(selected_items) - 1
+        print(k)
         ci_optimal = cis[:k, selected_item]
         di_optimal = math.sqrt(di2s[selected_item])
         elements = np.array([similarity(user,items[i])*similarity(user,items[selected_item])
@@ -61,19 +70,20 @@ def mydpp(recall_number, user, items, similarity, dis, epsilon=1E-10):
         if di2s[selected_item] < epsilon:
             break
         selected_items.append(selected_item)
-    return selected_items
+    return wrapresult(selected_items,dis,items,user)
 if __name__ =='__main__':
     print('cool')
     items, users, tags, neighbors = load_input_data()
-    dis = lambda u,v: 1/np.dot(u,v)
-    similarity = lambda u,v:np.dot(u,v)
-    result = []
+    # theta = 0.9
+    # similarity = lambda u,v: np.exp(0.9/(2-2*0.9)*np.log(np.linalg.norm(u-v)))
+    similarity = lambda  u,v:np.linalg.norm(u-v)**(4.5)
+    dis = lambda u,v:np.dot(u,v)
     start = time.time()
-    for id,user in enumerate(users):
-        # print(score.size)
-        result.append(mydpp(100,user,items,similarity,dis))
-        if id == 0:
-            break
+    results = []
+    for id,user in enumerate(users[:1]):
+        results.append(mydpp(100,user,items,similarity,dis))
     end = time.time()
+    print(results)
     print(f'use time {end-start}')
+    print(f'diversity is:{diversity(results,tags)},coverage is:{coverage(results,neighbors)}')
 
