@@ -227,4 +227,5 @@ def mybase():
     end = time.time()
     print(f'use time {end-start}')
 
-mybase()
+# mybase()
+print('abc')
