@@ -1,9 +1,9 @@
 import numpy as np
-def approximate_set_cover(recall_number,dis,tags,kinds=100):
+def approximate_set_cover(recall_number,dis,tags,kinds):
     item_num = len(dis)
     covers = []
     cost = []
-    U = set([i for i in range(kinds)])
+    U = set(kinds)
     for i in range(len(dis)):
         covers.append(set(tags[i].tolist()))
         cost.append(dis[i]/len(covers[i]))
