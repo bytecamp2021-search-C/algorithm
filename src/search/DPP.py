@@ -40,7 +40,7 @@ def wrapresult(results,dis,items,user):
                                dis(items[result],user)))
     return  wrap_result
 
-def mydpp(recall_number, user, items, similarity, dis, epsilon=1E-10):
+def mydpp(recall_number, user, items, similarity = lambda u,v:np.dot(u,v), dis = lambda u,v:np.dot(u,v), epsilon=1E-10):
     """
     max_length:要找回元素个数
     user:候选用户embed
@@ -76,12 +76,13 @@ if __name__ =='__main__':
     items, users, tags, neighbors = load_input_data()
     # theta = 0.9
     # similarity = lambda u,v: np.exp(0.9/(2-2*0.9)*np.log(np.linalg.norm(u-v)))
-    similarity = lambda  u,v:np.linalg.norm(u-v)**(4.5)
-    dis = lambda u,v:np.dot(u,v)
+    # similarity = lambda  u,v:np.linalg.norm(u-v)**(4.5)
+    similarity = lambda u,v:np.linalg.norm(u-v)
+    dis = lambda u,v:np.dot(u/np.linalg.norm(u),v/np.linalg.norm(v))
     start = time.time()
     results = []
     for id,user in enumerate(users[:1]):
-        results.append(mydpp(100,user,items,similarity,dis))
+        results.append(mydpp(5,user,items,similarity,dis))
     end = time.time()
     print(results)
     print(f'use time {end-start}')
