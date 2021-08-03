@@ -18,7 +18,7 @@ def save_object(obj,filename):
 	f.close()
 
 def load_object(filename):
-	f = open(filename,'r')
+	f = open(filename,'rb')
 	obj = pickle.load(f)
 	f.close()
 	return obj
