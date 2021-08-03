@@ -1,15 +1,15 @@
 import argparse
 import time
 
-from ann_benchmarks.algorithms.definitions import (Definition,instantiate_algorithm)
-from ann_benchmarks.datasets import get_dataset, DATASETS, get_dataset_fn
-from ann_benchmarks.distance import metrics, dataset_transform
-from ann_benchmarks.results import store_results
+from lib.ann.ann_benchmarks.algorithms.definitions import (Definition,instantiate_algorithm)
+from lib.ann.ann_benchmarks.datasets import get_dataset, DATASETS, get_dataset_fn
+from lib.ann.ann_benchmarks.distance import metrics, dataset_transform
+from lib.ann.ann_benchmarks.results import store_results
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.cluster import KMeans
 import h5py
-from ann_benchmarks.runner import run, run_individual_query
+from lib.ann.ann_benchmarks.runner import run, run_individual_query
 from sklearn.neighbors import KNeighborsClassifier
 
 import metrics

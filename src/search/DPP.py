@@ -1,9 +1,10 @@
 import numpy as np
 import math
 import time
+from bcutils import load_input_data
 
 
-def dpp(kernel_matrix, max_length, epsilon=1E-10):
+def raw_dpp(kernel_matrix, max_length, epsilon=1E-10):
     """
     Our proposed fast implementation of the greedy algorithm
     :param kernel_matrix: 2-d array
@@ -31,81 +32,48 @@ def dpp(kernel_matrix, max_length, epsilon=1E-10):
             break
         selected_items.append(selected_item)
     return selected_items
-
-
-def dpp_sw(kernel_matrix, window_size, max_length, epsilon=1E-10):
+def mydpp(recall_number, user, items, similarity, dis, epsilon=1E-10):
     """
-    Sliding window version of the greedy algorithm
-    :param kernel_matrix: 2-d array
-    :param window_size: positive int
-    :param max_length: positive int
-    :param epsilon: small positive scalar
-    :return: list
+    max_length:要找回元素个数
+    user:候选用户embed
+    items:候选商品个数
+    similarity(u,v):评估相似性的函数
+    dis(u,v):评估不相似性的函数
     """
-    item_size = kernel_matrix.shape[0]
-    v = np.zeros((max_length, max_length))
-    cis = np.zeros((max_length, item_size))
-    di2s = np.copy(np.diag(kernel_matrix))
+    item_size = items.shape[0]
+    cis = np.zeros((recall_number, item_size))
+    di2s = np.array([similarity(user,items[i])**2*dis(items[i], items[i]) for i in range(item_size)])
     selected_items = list()
     selected_item = np.argmax(di2s)
     selected_items.append(selected_item)
-    window_left_index = 0
-    while len(selected_items) < max_length:
+    while len(selected_items) < recall_number:
         k = len(selected_items) - 1
-        ci_optimal = cis[window_left_index:k, selected_item]
+        ci_optimal = cis[:k, selected_item]
         di_optimal = math.sqrt(di2s[selected_item])
-        v[k, window_left_index:k] = ci_optimal
-        v[k, k] = di_optimal
-        elements = kernel_matrix[selected_item, :]
-        eis = (elements - np.dot(ci_optimal, cis[window_left_index:k, :])) / di_optimal
+        elements = np.array([similarity(user,items[i])*similarity(user,items[selected_item])
+                             *dis(items[i], items[selected_item])
+                             for i in range(item_size)])
+        eis = (elements - np.dot(ci_optimal, cis[:k, :])) / di_optimal
         cis[k, :] = eis
         di2s -= np.square(eis)
-        if len(selected_items) >= window_size:
-            window_left_index += 1
-            for ind in range(window_left_index, k + 1):
-                t = math.sqrt(v[ind, ind] ** 2 + v[ind, window_left_index - 1] ** 2)
-                c = t / v[ind, ind]
-                s = v[ind, window_left_index - 1] / v[ind, ind]
-                v[ind, ind] = t
-                v[ind + 1:k + 1, ind] += s * v[ind + 1:k + 1, window_left_index - 1]
-                v[ind + 1:k + 1, ind] /= c
-                v[ind + 1:k + 1, window_left_index - 1] *= c
-                v[ind + 1:k + 1, window_left_index - 1] -= s * v[ind + 1:k + 1, ind]
-                cis[ind, :] += s * cis[window_left_index - 1, :]
-                cis[ind, :] /= c
-                cis[window_left_index - 1, :] *= c
-                cis[window_left_index - 1, :] -= s * cis[ind, :]
-            di2s += np.square(cis[window_left_index - 1, :])
         di2s[selected_item] = -np.inf
         selected_item = np.argmax(di2s)
         if di2s[selected_item] < epsilon:
             break
         selected_items.append(selected_item)
     return selected_items
+if __name__ =='__main__':
+    print('cool')
+    items, users, tags, neighbors = load_input_data()
+    dis = lambda u,v: 1/np.dot(u,v)
+    similarity = lambda u,v:np.dot(u,v)
+    result = []
+    start = time.time()
+    for id,user in enumerate(users):
+        # print(score.size)
+        result.append(mydpp(100,user,items,similarity,dis))
+        if id == 0:
+            break
+    end = time.time()
+    print(f'use time {end-start}')
 
-
-def testDpp():
-    item_size = 5000
-    feature_dimension = 50000
-    max_length = 1000
-
-    scores = np.exp(0.01 * np.random.randn(item_size) + 0.2)
-    feature_vectors = np.random.randn(item_size, feature_dimension)
-
-    feature_vectors /= np.linalg.norm(feature_vectors, axis=1, keepdims=True)
-    # feature_vectors /= np.linalg.norm(feature_vectors, axis=1)[:,None]
-    similarities = np.dot(feature_vectors, feature_vectors.T)
-    kernel_matrix = scores.reshape((item_size, 1)) * similarities * scores.reshape((1, item_size))
-
-    print('kernel matrix generated!')
-
-    t = time.time()
-    # result = dpp(kernel_matrix, max_length)
-    print('algorithm running time: ' + '\t' + "{0:.4e}".format(time.time() - t))
-
-    window_size = 10
-    t = time.time()
-    # result_sw = dpp_sw(kernel_matrix, window_size, max_length)
-    print('sw algorithm running time: ' + '\t' + "{0:.4e}".format(time.time() - t))
-
-testDpp()

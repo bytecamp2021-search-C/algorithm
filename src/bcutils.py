@@ -1,11 +1,13 @@
 import pickle
 import numpy as np
 
-from ann_benchmarks.datasets import get_dataset
-from ann_benchmarks.distance import dataset_transform
+from lib.ann.ann_benchmarks.datasets import get_dataset
+from lib.ann.ann_benchmarks.distance import dataset_transform
+
 def load_input_data(dataset="glove-25-angular"):
 	D, dimension = get_dataset(dataset)
-	tags = np.array(D['tags'])
+	# tags = np.array(D['tags'])
+	tags = []
 	distance = D.attrs['distance']
 	neighbors = np.array(D['neighbors'])
 	items, users = dataset_transform(D)
