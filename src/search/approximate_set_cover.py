@@ -1,5 +1,5 @@
 import numpy as np
-def approximate_set_cover(kinds,recall_number,dis,tags):
+def approximate_set_cover(recall_number,dis,tags,kinds=100):
     item_num = len(dis)
     covers = []
     cost = []
@@ -32,4 +32,4 @@ if __name__ =='__main__':
     for i in range(5):
         tags.append(np.random.choice(x,np.random.randint(1,10),replace=False))
     print(np.array(tags))
-    print(approximate_set_cover(30,5,dis,tags))
+    print(approximate_set_cover(5,dis,tags,30))
