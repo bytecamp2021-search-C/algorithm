@@ -12,7 +12,7 @@ def approximate_set_cover(recall_number, dis, tags, kinds):
     cost = np.array(cost)
     # print(cost)
     select_items = []
-    for i in range(recall_number):
+    for j in range(recall_number):
         select_item = np.argmin(cost)
         select_items.append(select_item)
         cost[select_item] += np.inf
