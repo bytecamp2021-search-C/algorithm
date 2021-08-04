@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import time
-from bcutils import load_input_data
+from utils.bcutils import load_input_data
 from metrics import diversity, coverage
 
 
