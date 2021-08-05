@@ -6,7 +6,7 @@ import random
 from urllib.request import urlopen
 from urllib.request import urlretrieve
 
-from src.lib.ann.ann_benchmarks.distance import dataset_transform
+from lib.ann.ann_benchmarks.distance import dataset_transform
 # from  distance import  dataset_transform
 
 

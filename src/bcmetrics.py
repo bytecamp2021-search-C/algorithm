@@ -1,5 +1,5 @@
 import numpy as np
-import bcutils
+from utils import bcutils
 
 def diversity(results, tags):
 	tag_c = 0
