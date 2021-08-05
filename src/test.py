@@ -128,19 +128,22 @@ def test_avg_distance(items,users,tags,neighbors):
 		avg,std = bcmetrics.avg_distance(users,items,res,bcutils.calc_dist)
 		print("avg_dist:",avg,"  std_dist:",std)
 
-
 def subsampling_data(items,users,tags,neighbors,proportion=0.1,num_recall=100):
 	item_idx = bcutils.random_sample(items,int(len(items)*proportion))
+	idx_dict = {item_idx[k]:k for k in range(len(item_idx))}
 	select_set = set(item_idx)
 	sub_neighbors = []
 	user_idx = []
 
+	print(len(select_set))
+	stats = []
 	t0 = time.time()
 	for user_id in range(len(users)):
 		neighbor = []
 		for e in neighbors[user_id]:
 			if e in select_set:
-				neighbor.append(e)
+				neighbor.append(idx_dict[e])
+		stats.append(len(neighbor))
 		if len(neighbor)<num_recall:
 			continue
 		user_idx.append(user_id)
@@ -150,8 +153,11 @@ def subsampling_data(items,users,tags,neighbors,proportion=0.1,num_recall=100):
 		total_time = time.time()-t0
 		if user_id%100==0:
 			print("Current user",user_id,"Total time:",total_time)
+	print("Number of users reserved!",len(user_idx))
+	print(user_idx[0])
+	print(np.percentile(stats,[0,25,50,75,100]))
+	return items[item_idx],users[user_idx],tags[item_idx],np.array(sub_neighbors)
 
-	return items[item_idx],users[user_idx],tags[item_idx],sub_neighbors
 
 
 if __name__=="__main__":
