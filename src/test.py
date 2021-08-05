@@ -155,12 +155,12 @@ if __name__=="__main__":
 	items,users,tags,neighbors = bcutils.load_input_data()
 	#bcutils.save_object([items,users,tags,neighbors],"./data/dataset_subsample_10%%.obj")
 	
-	#test_hnsw_baseline(items,users,tags,neighbors)
-	#test_random_recall(items,users,tags,neighbors)
-	#test_hnsw_random_merge(items,users,tags,neighbors)
-	#test_hnsw_plus_recall(items,users,tags,neighbors)
-	#test_build_index(items,tags)
+	test_hnsw_baseline(items,users,tags,neighbors)
+	test_random_recall(items,users,tags,neighbors)
+	test_hnsw_random_merge(items,users,tags,neighbors)
+	test_hnsw_plus_recall(items,users,tags,neighbors)
+	test_build_index(items,tags)
 	test_diversity_recall(items,users,tags,neighbors)
 	test_hnsw_plus_set_cover_model(items,users,tags,neighbors)
-	#test_avg_distance(items,users,tags,neighbors)
+	test_avg_distance(items,users,tags,neighbors)
 	
