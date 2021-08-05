@@ -2,5 +2,5 @@
 max-complexity = 10
 max-line-length = 127
 statistics = True
-ignore = F841,F401,W191,F821,E231,E101,E731,E265,W504,E225,E271,E712,W292,E402
+select = E123,W456
 exclude = lib
