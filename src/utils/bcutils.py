@@ -8,7 +8,7 @@ from lib.ann.ann_benchmarks.distance import dataset_transform
 
 def load_input_data(dataset="glove-25-angular"):
     # D, dimension = get_dataset(dataset)
-    D = h5py.File(f'../data/{dataset}.hdf5', 'r')
+    D = h5py.File(f'data/{dataset}.hdf5', 'r')
     print(D.keys())
     tags = np.array(D['tags'])
     # tags = []

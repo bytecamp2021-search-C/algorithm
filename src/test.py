@@ -1,6 +1,9 @@
 import argparse
 import time
 import numpy as np
+import  sys
+sys.path.append('..')
+sys.path.append('lib/ann')
 
 import bcmetrics
 from utils import bcutils
@@ -127,7 +130,7 @@ def test_avg_distance(items,users,tags,neighbors):
 
 
 def subsampling_data(items,users,tags,neighbors,proportion=0.1,num_recall=100):
-	item_idx = random_sample(items,int(len(items)*proportion))
+	item_idx = bcutils.random_sample(items,int(len(items)*proportion))
 	select_set = set(item_idx)
 	sub_neighbors = []
 	user_idx = []
@@ -141,7 +144,7 @@ def subsampling_data(items,users,tags,neighbors,proportion=0.1,num_recall=100):
 		if len(neighbor)<num_recall:
 			continue
 		user_idx.append(user_id)
-		res = [[e,bcutils.calc_dist(users[usesr_id],items[e])] for e in neighbor]
+		res = [[e,bcutils.calc_dist(users[user_id],items[e])] for e in neighbor]
 		res = sorted(res,key=lambda x:x[1])
 		sub_neighbors.append([res[i][0] for i in range(num_recall)])
 		total_time = time.time()-t0

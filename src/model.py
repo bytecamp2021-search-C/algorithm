@@ -1,18 +1,11 @@
-import argparse
 import time
 
 from lib.ann.ann_benchmarks.algorithms.definitions import (Definition,instantiate_algorithm)
-from lib.ann.ann_benchmarks.datasets import get_dataset, DATASETS, get_dataset_fn
-from lib.ann.ann_benchmarks.distance import metrics, dataset_transform
-from lib.ann.ann_benchmarks.results import store_results
-import matplotlib.pyplot as plt
+from lib.ann.ann_benchmarks.distance import metrics
 import numpy as np
-from sklearn.cluster import KMeans
-import h5py
-from lib.ann.ann_benchmarks.runner import run, run_individual_query
-from sklearn.neighbors import KNeighborsClassifier
+from lib.ann.ann_benchmarks.runner import run_individual_query
 
-from approximate_set_cover import approximate_set_cover,set_cover_plus
+from search.approximate_set_cover import approximate_set_cover,set_cover_plus
 import bcmetrics
 from utils import bcutils
 from bcthread import MyThread
